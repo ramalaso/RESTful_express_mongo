@@ -11,6 +11,16 @@ router.get('/', async (req, res)=>{
     }
 })
 
+
+router.get('/:id', async (req, res)=>{
+    try {
+    const post = await Post.findById(req.params.id)
+    res.json(post)
+    } catch (error) {
+    res.json({message: error})
+    }
+} )
+
 router.post('/', (req, res)=>{
     const post = new Post({
         title: req.body.title,
@@ -24,6 +34,27 @@ router.post('/', (req, res)=>{
     .catch(error => {
         res.json({ message: error})
     })
+})
+
+router.delete('/:id', async (req, res) => {
+    try{
+        const removedPost = await Post.remove({_id: req.params.id})
+        res.json(removedPost)
+    } catch(error) {
+        res.json({message: error})
+    }
+})
+
+router.patch('/:id', async(req, res)=>{
+    try {
+        const updatedPost = await Post.updateOne(
+            {_id: req.params.id},
+            {$set: { title: req.body.title}}
+        )
+        res.json(updatedPost)
+    } catch (error) {
+        res.json({message: error})
+    }
 })
 
 module.exports = router
